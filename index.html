@@ -7,7 +7,46 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+    <div class="gridWrap">
+        <div id="characterDescriptions">
+            <h1>Character Descriptions:</h1>
+            <br>
+            <div id="heroDescription">
+                <h2 id="heroChosen"></h2>
+                <h3 id="heroAbility"></h3>
+                <h3 id="heroHp"></h3>
+                <h3 id="heroPower"></h3>
+                <h3 id="heroDodge"></h3>
+                <h3 id="heroBlock"></h3>
+            </div>
+            <br>
+            <div id="enemyDescription">
+                <h2 id="enemyChosen"></h2>
+                <h3 id="enemyAbility"></h3>
+                <h3 id="enemyHp"></h3>
+                <h3 id="enemyPower"></h3>
+                <h3 id="enemyDodge"></h3>
+                <h3 id="enemyBlock"></h3>
+            </div>
+        </div>
+
+        <div id="battleLog">
+            <h1>Battle Log:</h1>
+            <br>
+            <button id="turnBtn" type="button" onclick="Turn()">Next Turn</button>
+            <h2 id="characterTurn"></h2>
+            <h3 id="rollToHit"></h3>
+            <h3 id="attackHits"></h3>
+            <h3 id="damageRoll"></h3>
+            <h3 id="damageRoll&Power"></h3>
+            <h3 id="damageDone"></h3>
+            <h3 id="characterDies"></h3>
+            <h2 id="characterWins"></h2>
+            <h3 id="characterDoesNotDie"></h3>
+            <h3 id="noDamage"></h3>
+            <h3 id="attackMisses"></h3>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

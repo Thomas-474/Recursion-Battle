@@ -117,6 +117,13 @@
             currentHero = paladin;
         }
         console.log(`Hero: ${currentHero.name}, the ${currentHero.type}`);
+        document.getElementById('heroChosen').innerHTML = `Hero: ${currentHero.name}, the ${currentHero.type}`;
+        document.getElementById('heroAbility').innerHTML = `Ability: ${currentHero.specialAbility}`;
+        document.getElementById('heroHp').innerHTML = `Total Hit Points: ${currentHero.hitPoints}`;
+        document.getElementById('heroPower').innerHTML = `Power: ${currentHero.power}`;
+        document.getElementById('heroDodge').innerHTML = `Dodge: ${currentHero.dodge}`;
+        document.getElementById('heroBlock').innerHTML = `Block: ${currentHero.block}`;
+
 
         // Enemy Select
         EnemyChances();
@@ -132,6 +139,12 @@
             currentEnemy = tarrasque;
         }
         console.log(`Enemy: ${currentEnemy.name}`);
+        document.getElementById('enemyChosen').innerHTML = `Enemy: ${currentEnemy.name}`;
+        document.getElementById('enemyAbility').innerHTML = `Ability: ${currentEnemy.specialAbility}`;
+        document.getElementById('enemyHp').innerHTML = `Total Hit Points: ${currentEnemy.hitPoints}`;
+        document.getElementById('enemyPower').innerHTML = `Power: ${currentEnemy.power}`;
+        document.getElementById('enemyDodge').innerHTML = `Dodge: ${currentEnemy.dodge}`;
+        document.getElementById('enemyBlock').innerHTML = `Block: ${currentEnemy.block}`;
         
         // First Attacker
         FiftyPercent();
@@ -149,52 +162,60 @@
         function Turn(){
             console.log('------------------------------');
             console.log(`It is ${attacker.name}'s turn to attack`);
+            document.getElementById('characterTurn').innerHTML = `It is ${attacker.name}'s turn to attack`;
 
             // Roll to Hit
             dice30Sided();
             console.log(`${attacker.name} rolls a(n) ${d30} to hit ${defender.name} with ${attacker.specialAbility}`);
+            document.getElementById('rollToHit').innerHTML = `${attacker.name} rolls a(n) ${d30} to hit ${defender.name} with ${attacker.specialAbility}`;
 
             // Attack Hits
             if (d30 >= defender.dodge){
                 console.log(`${attacker.name}'s ${attacker.specialAbility} hits ${defender.name}`);
+                document.getElementById('attackHits').innerHTML = `${attacker.name}'s ${attacker.specialAbility} hits ${defender.name}`;
 
                 // Roll for Damage
                 dice20Sided();
                 console.log(`${attacker.name} rolls a(n) ${d20} for damage`);
+                document.getElementById('damageRoll').innerHTML = `${attacker.name} rolls a(n) ${d20} for damage`;
                 d20 += attacker.power;
-                console.log(`${attacker.name}'s damage roll + their power = ${d20} damage`);
+                console.log(`${attacker.name}'s damage roll + power = ${d20} damage`);
+                document.getElementById('damageRoll&Power').innerHTML = `${attacker.name}'s damage roll + their power = ${d20} damage`;
                 d20 -= defender.block;
 
                 // Attack Does Damage
                 if (d20 > 0){
                     console.log(`${defender.name} blocks ${defender.block} damage and takes ${d20} damage`);
+                    document.getElementById('damageDone').innerHTML = `${defender.name} blocks ${defender.block} damage and takes ${d20} damage`;
                     defender.hitPoints -= d20;
 
                     // Defender Dies
                     if (defender.hitPoints <= 0){
                         console.log(`${defender.name} has 0 hit points left and dies`);
+                        document.getElementById('characterDies').innerHTML = `${defender.name} has 0 hit points left and dies`;
                         console.log('------------------------------');
                         console.log(`${attacker.name} wins the battle`);
+                        document.getElementById('characterWins').innerHTML = `${attacker.name} wins the battle`;
 
                     // Defender Doesn't Die
                     } else{
                         console.log(`${defender.name} has ${defender.hitPoints} hit point(s) left`);
+                        document.getElementById('characterDoesNotDie').innerHTML = `${defender.name} has ${defender.hitPoints} hit point(s) left`;
                         [attacker, defender] = [defender, attacker];
-                        Turn();
                     }
 
                 // Attack Doesn't Do Damage
                 } else{
                     console.log(`${defender.name} blocks all damage`);
+                    document.getElementById('noDamage').innerHTML = `${defender.name} blocks all damage`;
                     [attacker, defender] = [defender, attacker];
-                    Turn();
                 }
 
             // Attack Misses
             } else{
                 console.log(`${attacker.name}'s ${attacker.specialAbility} misses`);
+                document.getElementById('attackMisses').innerHTML = `${attacker.name}'s ${attacker.specialAbility} misses`;
                 [attacker, defender] = [defender, attacker];
-                Turn();
             }
         }
         console.log(Turn());
