@@ -160,6 +160,10 @@
 
         // Turn
         function Turn(){
+            document.getElementById('characterDoesNotDie').innerHTML = '';
+            document.getElementById('noDamage').innerHTML = '';
+            document.getElementById('attackMisses').innerHTML = '';
+
             console.log('------------------------------');
             console.log(`It is ${attacker.name}'s turn to attack`);
             document.getElementById('characterTurn').innerHTML = `It is ${attacker.name}'s turn to attack`;
@@ -202,6 +206,7 @@
                         console.log(`${defender.name} has ${defender.hitPoints} hit point(s) left`);
                         document.getElementById('characterDoesNotDie').innerHTML = `${defender.name} has ${defender.hitPoints} hit point(s) left`;
                         [attacker, defender] = [defender, attacker];
+                        // Turn();
                     }
 
                 // Attack Doesn't Do Damage
@@ -209,6 +214,7 @@
                     console.log(`${defender.name} blocks all damage`);
                     document.getElementById('noDamage').innerHTML = `${defender.name} blocks all damage`;
                     [attacker, defender] = [defender, attacker];
+                    // Turn();
                 }
 
             // Attack Misses
@@ -216,6 +222,7 @@
                 console.log(`${attacker.name}'s ${attacker.specialAbility} misses`);
                 document.getElementById('attackMisses').innerHTML = `${attacker.name}'s ${attacker.specialAbility} misses`;
                 [attacker, defender] = [defender, attacker];
+                // Turn();
             }
         }
         console.log(Turn());
