@@ -1,8 +1,35 @@
 body{
     text-align: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#characterDescriptions, #battleLog{
+    background-color: rgba(255, 115, 0, 0.315);
+    margin: 70px;
 }
 
 .gridWrap{
     display: grid;
     grid-template-columns: 1fr 1fr;
+}
+
+.goblinPic{
+    background-image: url("GoblinBackground.jpg");
+}
+
+.owlbearPic{
+    background-image: url("OwlbearBackground.jpg");
+}
+
+.mindFlayerPic{
+    background-image: url("MindFlayerBackground.jpg");
+}
+
+.dragonPic{
+    background-image: url("RedDragonBackground.jpg");
+}
+
+.tarrasquePic{
+    background-image: url("TarrasqueBackground.jpg");
 }
