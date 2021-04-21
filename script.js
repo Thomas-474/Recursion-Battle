@@ -38,19 +38,16 @@
         halfChance = Math.floor(Math.random() * 2 + 1);
         return halfChance;
     }
-
     var d20;
     function dice20Sided(){
         d20 = Math.floor(Math.random() * 20 + 1);
         return d20;
     }
-
     var d30;
     function dice30Sided(){
         d30 = Math.floor(Math.random() * 30 + 1);
         return d30;
     }
-
     var enemySelect;
     function EnemyChances(){
         enemySelect = Math.floor(Math.random() * 100 + 1);
@@ -66,7 +63,7 @@
             Enemy- Randomly selected, but the harder the enemy, the less likely they're to be picked (Goblin-30% (enemySelect #1-30), Owlbear-25% (enemySelect #31-55), Mind Flayer-20% (enemySelect #56-75), Red Dragon-15% (enemySelect #76-90), Tarrasque-10% (enemySelect #91-100)).
 
             First Turn/Attack- It is a 50% chance of whether the hero or enemy will attack first. Hero is halfChance #1 and enemy is halfChance #2.
-            
+
         Stats:
             Hit Points- The amount of health a character has and how much damage they can take before they die.
 
@@ -91,25 +88,8 @@
     var currentEnemy;
     var attacker;
     var defender;
-
-    // Clearing Background Function
-    function ClearBackground(){
-        document.getElementsByClassName("goblinPic").disabled = true;
-        document.getElementsByClassName("owlbearPic").disabled = true;
-        document.getElementsByClassName("mindFlayerPic").disabled = true;
-        document.getElementsByClassName("dragonPic").disabled = true;
-        document.getElementsByClassName("tarrasquePic").disabled = true;
-    }
-
-    // Clearing Background
-    ClearBackground();
-
-    // Battle Set Up
-    function BattleSetUp(){
-        // Clearing Background
-        ClearBackground();
-
-        // Clearing Battle Log
+    // Clearing Battle Log Function
+    function ClearBattleLog(){
         document.getElementById('characterTurn').innerHTML = '';
         document.getElementById('rollToHit').innerHTML = '';
         document.getElementById('attackHits').innerHTML = '';
@@ -121,10 +101,27 @@
         document.getElementById('characterDoesNotDie').innerHTML = '';
         document.getElementById('noDamage').innerHTML = '';
         document.getElementById('attackMisses').innerHTML = '';
-
-        // Show Button
+    }
+    // Resetting HP Function
+    function ResettingHP(){
+        goblin.hitPoints = 5;
+        owlbear.hitPoints = 10;
+        mindFlayer.hitPoints = 15;
+        redDragon.hitPoints = 20;
+        tarrasque.hitPoints = 25;
+        rogue.hitPoints = 15;
+        paladin.hitPoints = 20;
+    }
+    // Turn Button Disabled
+    document.getElementById("turnBtn").disabled = true;
+    // Battle Set Up Function
+    function BattleSetUp(){
+        // Clearing Battle Log
+        ClearBattleLog();
+        // Clearing Background Image
+        document.getElementById("body").style.backgroundImage = "none";
+        // Show Turn Button
         document.getElementById("turnBtn").disabled = false;
-
         // Hero Select
         FiftyPercent();
         if (halfChance == 1){
@@ -138,23 +135,22 @@
         document.getElementById('heroPower').innerHTML = `Power: ${currentHero.power}`;
         document.getElementById('heroDodge').innerHTML = `Dodge: ${currentHero.dodge}`;
         document.getElementById('heroBlock').innerHTML = `Block: ${currentHero.block}`;
-
         // Enemy Select
         EnemyChances();
         if (enemySelect >= 1 && enemySelect <= 30){
-            document.getElementsByClassName("goblinPic").disabled = false;
+            document.getElementById("body").style.backgroundImage = "url('GoblinBackground.jpg')";
             currentEnemy = goblin;
         } else if (enemySelect >= 31 && enemySelect <= 55){
-            document.getElementsByClassName("owlbearPic").disabled = false;
+            document.getElementById("body").style.backgroundImage = "url('OwlbearBackground.jpg')";
             currentEnemy = owlbear;
         } else if (enemySelect >= 56 && enemySelect <= 75){
-            document.getElementsByClassName("mindFlayerPic").disabled = false;
+            document.getElementById("body").style.backgroundImage = "url('MindFlayerBackground.jpg')";
             currentEnemy = mindFlayer;
         } else if (enemySelect >= 76 && enemySelect <= 90){
-            document.getElementsByClassName("dragonPic").disabled = false;
+            document.getElementById("body").style.backgroundImage = "url('RedDragonBackground.jpg')";
             currentEnemy = redDragon;
         } else{
-            document.getElementsByClassName("tarrasquePic").disabled = false;
+            document.getElementById("body").style.backgroundImage = "url('TarrasqueBackground.jpg')";
             currentEnemy = tarrasque;
         }
         document.getElementById('enemyChosen').innerHTML = `Enemy: ${currentEnemy.name}`;
@@ -163,8 +159,7 @@
         document.getElementById('enemyPower').innerHTML = `Power: ${currentEnemy.power}`;
         document.getElementById('enemyDodge').innerHTML = `Dodge: ${currentEnemy.dodge}`;
         document.getElementById('enemyBlock').innerHTML = `Block: ${currentEnemy.block}`;
-        
-        // First Attacker
+        // 50/50 for First Attacker
         FiftyPercent();
         // Hero Attacks First
         if (halfChance == 1){
@@ -179,70 +174,55 @@
 //#endregion
 ////////
 //#region Battle
-    // Turns
+    // Turns Function
     function Turn(){
-        document.getElementById('characterTurn').innerHTML = '';
-        document.getElementById('rollToHit').innerHTML = '';
-        document.getElementById('attackHits').innerHTML = '';
-        document.getElementById('damageRoll').innerHTML = '';
-        document.getElementById('damageRoll&Power').innerHTML = '';
-        document.getElementById('damageDone').innerHTML = '';
-        document.getElementById('characterDies').innerHTML = '';
-        document.getElementById('characterWins').innerHTML = '';
-        document.getElementById('characterDoesNotDie').innerHTML = '';
-        document.getElementById('noDamage').innerHTML = '';
-        document.getElementById('attackMisses').innerHTML = '';
-
+        // Clearing Battle Log
+        ClearBattleLog();
+        // Character's Turn to Attack
         document.getElementById('characterTurn').innerHTML = `It is ${attacker.name}'s turn to attack`;
-
         // Roll to Hit
         dice30Sided();
         document.getElementById('rollToHit').innerHTML = `${attacker.name} rolls a(n) ${d30} to hit ${defender.name} with ${attacker.specialAbility}`;
-
         // Attack Hits
         if (d30 >= defender.dodge){
             document.getElementById('attackHits').innerHTML = `${attacker.name}'s ${attacker.specialAbility} hits ${defender.name}`;
-
             // Roll for Damage
             dice20Sided();
             document.getElementById('damageRoll').innerHTML = `${attacker.name} rolls a(n) ${d20} for damage`;
+            // (Roll Number + Attacker's Power) - Defender's Block
             d20 += attacker.power;
             document.getElementById('damageRoll&Power').innerHTML = `${attacker.name}'s damage roll + their power = ${d20} damage`;
             d20 -= defender.block;
-
             // Attack Does Damage
             if (d20 > 0){
                 document.getElementById('damageDone').innerHTML = `${defender.name} blocks ${defender.block} damage and takes ${d20} damage`;
                 defender.hitPoints -= d20;
-
                 // Defender Dies
                 if (defender.hitPoints <= 0){
-                    goblin.hitPoints = 5;
-                    owlbear.hitPoints = 10;
-                    mindFlayer.hitPoints = 15;
-                    redDragon.hitPoints = 20;
-                    tarrasque.hitPoints = 25;
-                    rogue.hitPoints = 15;
-                    paladin.hitPoints = 20;
+                    // HP Reset
+                    ResettingHP();
+                    // Turn Button Disabled
                     document.getElementById("turnBtn").disabled = true;
+                    // Who Wins & Loses
                     document.getElementById('characterDies').innerHTML = `${defender.name} has 0 hit points left and dies`;
                     document.getElementById('characterWins').innerHTML = `${attacker.name} wins the battle`;
-
                 // Defender Doesn't Die
                 } else{
+                    // Defender's Remaining HP
                     document.getElementById('characterDoesNotDie').innerHTML = `${defender.name} has ${defender.hitPoints} hit point(s) left`;
+                    // Current Attacker & Defender Switch Positions as Turn Ends
                     [attacker, defender] = [defender, attacker];
                 }
-
             // Attack Doesn't Do Damage
             } else{
                 document.getElementById('noDamage').innerHTML = `${defender.name} blocks all damage`;
+                // Current Attacker & Defender Switch Positions as Turn Ends
                 [attacker, defender] = [defender, attacker];
             }
-
         // Attack Misses
         } else{
             document.getElementById('attackMisses').innerHTML = `${attacker.name}'s ${attacker.specialAbility} misses`;
+            // Current Attacker & Defender Switch Positions as Turn Ends
             [attacker, defender] = [defender, attacker];
         }
     }
