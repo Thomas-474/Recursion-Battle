@@ -10,11 +10,11 @@
         this.block = block;
     }
     //                           name                         type           ability       totalHp  hp  p   d   b
-    var goblin = new Enemy     ('Wrag the Goblin',           'Goblin',      'Club Swing',   5,      5,  5,  25, 5 );
-    var owlbear = new Enemy    ('Owlbear',                   'Owlbear',     'Claw Strike',  10,     10, 10, 20, 10);
-    var mindFlayer = new Enemy ('Vussadire the Mind Flayer', 'Mind Flayer', 'Mind Blast',   15,     15, 15, 15, 15);
-    var redDragon = new Enemy  ('Relidos the Red Dragon',    'Red Dragon',  'Fire Breath',  20,     20, 20, 10, 20);
-    var tarrasque = new Enemy  ('Tarrasque',                 'Tarrasque',   'Chomp',        25,     25, 25, 5,  25);
+    var goblin = new Enemy     ('Wrag the Goblin',           'Goblin',      'Club Swing',   5,      5,  2,  10, 2);
+    var owlbear = new Enemy    ('Owlbear',                   'Owlbear',     'Claw Strike',  10,     10, 4,  8,  4);
+    var mindFlayer = new Enemy ('Vussadire the Mind Flayer', 'Mind Flayer', 'Mind Blast',   15,     15, 6,  6,  6);
+    var redDragon = new Enemy  ('Relidos the Red Dragon',    'Red Dragon',  'Fire Breath',  20,     20, 8,  4,  8);
+    var tarrasque = new Enemy  ('Tarrasque',                 'Tarrasque',   'Chomp',        25,     25, 10, 2,  10);
 //#endregion
 ////////
 //#region Heroes
@@ -29,9 +29,9 @@
         this.dodge = dodge;
         this.block = block;
     }
-    //                        name      type       ability        xp  totalHp  hp  p   d   b
-    var rogue = new Hero    ('Tavion', 'Rogue',   'Sneak Attack', 0,   15,     15, 20, 25, 5 );
-    var paladin = new Hero  ('Landen', 'Paladin', 'Divine Smite', 0,   20,     20, 15, 5,  25);
+    //                        name      type       ability        xp  totalHp  hp  p  d   b
+    var rogue = new Hero    ('Tavion', 'Rogue',   'Sneak Attack', 0,   17,     17, 8, 10, 2);
+    var paladin = new Hero  ('Landen', 'Paladin', 'Divine Smite', 0,   20,     20, 6, 2,  10);
 //#endregion
 ////////
 //#region Dice & Randomizers
@@ -116,14 +116,18 @@
     }
     // Turn Button Disabled
     document.getElementById("turnBtn").disabled = true;
+    // Skip Turns Button Disabled
+    document.getElementById("skipBtn").disabled = true;
     // Battle Set Up Function
     function BattleSetUp(){
         // Clearing Battle Log
         ClearBattleLog();
         // Clearing Background Image
         document.getElementById("body").style.backgroundImage = "none";
-        // Show Turn Button
+        // Enables Turn Button
         document.getElementById("turnBtn").disabled = false;
+        // Enables Skip Turns Button
+        document.getElementById("skipBtn").disabled = false;
         // Hero Select
         FiftyPercent();
         if (halfChance == 1){
@@ -208,11 +212,13 @@
                 if (defender.hitPoints <= 0){
                     // HP Reset
                     ResettingHP();
-                    // Turn Button Disabled
-                    document.getElementById("turnBtn").disabled = true;
                     // Who Wins & Loses
                     document.getElementById('characterDies').innerHTML = `${defender.name} has 0 hit points left and dies`;
                     document.getElementById('characterWins').innerHTML = `${attacker.name} wins the battle`;
+                    // Turn Button Disabled
+                    document.getElementById("turnBtn").disabled = true;
+                    // Skip Turns Button Disabled
+                    document.getElementById("skipBtn").disabled = true;
                 // Defender Doesn't Die
                 } else{
                     // Defender's Remaining HP
@@ -231,6 +237,69 @@
             document.getElementById('attackMisses').innerHTML = `${attacker.name}'s ${attacker.specialAbility} misses`;
             // Current Attacker & Defender Switch Positions as Turn Ends
             [attacker, defender] = [defender, attacker];
+        }
+    }
+//#endregion
+////////
+//#region Skip to End of Battle
+    // Skip Turns Function
+    function SkipTurns(){
+        // Clearing Battle Log
+        ClearBattleLog();
+        // Character's Turn to Attack
+        document.getElementById('characterTurn').innerHTML = `It is ${attacker.name}'s turn to attack`;
+        // Roll to Hit
+        dice30Sided();
+        document.getElementById('rollToHit').innerHTML = `${attacker.name} rolls a(n) ${d30} to hit ${defender.name} with ${attacker.specialAbility}`;
+        // Attack Hits
+        if (d30 >= defender.dodge){
+            document.getElementById('attackHits').innerHTML = `${attacker.name}'s ${attacker.specialAbility} hits ${defender.name}`;
+            // Roll for Damage
+            dice20Sided();
+            document.getElementById('damageRoll').innerHTML = `${attacker.name} rolls a(n) ${d20} for damage`;
+            // (Roll Number + Attacker's Power) - Defender's Block
+            d20 += attacker.power;
+            document.getElementById('damageRoll&Power').innerHTML = `${attacker.name}'s damage roll + their power = ${d20} damage`;
+            d20 -= defender.block;
+            // Attack Does Damage
+            if (d20 > 0){
+                document.getElementById('damageDone').innerHTML = `${defender.name} blocks ${defender.block} damage and takes ${d20} damage`;
+                defender.hitPoints -= d20;
+                // Current HP Updates
+                document.getElementById('heroHp').innerHTML = `Current Hit Points: ${currentHero.hitPoints}`;
+                document.getElementById('enemyHp').innerHTML = `Current Hit Points: ${currentEnemy.hitPoints}`;
+                // Defender Dies
+                if (defender.hitPoints <= 0){
+                    // HP Reset
+                    ResettingHP();
+                    // Who Wins & Loses
+                    document.getElementById('characterDies').innerHTML = `${defender.name} has 0 hit points left and dies`;
+                    document.getElementById('characterWins').innerHTML = `${attacker.name} wins the battle`;
+                    // Turn Button Disabled
+                    document.getElementById("turnBtn").disabled = true;
+                    // Skip Turns Button Disabled
+                    document.getElementById("skipBtn").disabled = true;
+                // Defender Doesn't Die
+                } else{
+                    // Defender's Remaining HP
+                    document.getElementById('characterDoesNotDie').innerHTML = `${defender.name} has ${defender.hitPoints} hit point(s) left`;
+                    // Current Attacker & Defender Switch Positions as Turn Ends
+                    [attacker, defender] = [defender, attacker];
+                    SkipTurns();
+                }
+            // Attack Doesn't Do Damage
+            } else{
+                document.getElementById('noDamage').innerHTML = `${defender.name} blocks all damage`;
+                // Current Attacker & Defender Switch Positions as Turn Ends
+                [attacker, defender] = [defender, attacker];
+                SkipTurns();
+            }
+        // Attack Misses
+        } else{
+            document.getElementById('attackMisses').innerHTML = `${attacker.name}'s ${attacker.specialAbility} misses`;
+            // Current Attacker & Defender Switch Positions as Turn Ends
+            [attacker, defender] = [defender, attacker];
+            SkipTurns();
         }
     }
 //#endregion
