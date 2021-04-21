@@ -1,35 +1,37 @@
 //#region Enemies
-    function Enemy(name, type, specialAbility, hitPoints, power, dodge, block){
+    function Enemy(name, type, specialAbility, totalHitPoints, hitPoints, power, dodge, block){
         this.name = name;
         this.type = type;
         this.specialAbility = specialAbility;
+        this.totalHitPoints = totalHitPoints;
         this.hitPoints = hitPoints;
         this.power = power;
         this.dodge = dodge;
         this.block = block;
     }
-    //                           name                         type           ability       hp  p   d   b
-    var goblin = new Enemy     ('Wrag the Goblin',           'Goblin',      'Club Swing',  5,  5,  25, 5 );
-    var owlbear = new Enemy    ('Owlbear',                   'Owlbear',     'Claw Strike', 10, 10, 20, 10);
-    var mindFlayer = new Enemy ('Vussadire the Mind Flayer', 'Mind Flayer', 'Mind Blast',  15, 15, 15, 15);
-    var redDragon = new Enemy  ('Relidos the Red Dragon',    'Red Dragon',  'Fire Breath', 20, 20, 10, 20);
-    var tarrasque = new Enemy  ('Tarrasque',                 'Tarrasque',   'Chomp',       25, 25, 5,  25);
+    //                           name                         type           ability       totalHp  hp  p   d   b
+    var goblin = new Enemy     ('Wrag the Goblin',           'Goblin',      'Club Swing',   5,      5,  5,  25, 5 );
+    var owlbear = new Enemy    ('Owlbear',                   'Owlbear',     'Claw Strike',  10,     10, 10, 20, 10);
+    var mindFlayer = new Enemy ('Vussadire the Mind Flayer', 'Mind Flayer', 'Mind Blast',   15,     15, 15, 15, 15);
+    var redDragon = new Enemy  ('Relidos the Red Dragon',    'Red Dragon',  'Fire Breath',  20,     20, 20, 10, 20);
+    var tarrasque = new Enemy  ('Tarrasque',                 'Tarrasque',   'Chomp',        25,     25, 25, 5,  25);
 //#endregion
 ////////
 //#region Heroes
-    function Hero(name, type, specialAbility, experience, hitPoints, power, dodge, block){
+    function Hero(name, type, specialAbility, experience, totalHitPoints, hitPoints, power, dodge, block){
         this.name = name;
         this.type = type;
         this.specialAbility = specialAbility;
         this.experience = experience;
+        this.totalHitPoints = totalHitPoints;
         this.hitPoints = hitPoints;
         this.power = power;
         this.dodge = dodge;
         this.block = block;
     }
-    //                        name      type       ability        xp hp  p   d   b
-    var rogue = new Hero    ('Tavion', 'Rogue',   'Sneak Attack', 0, 15, 20, 25, 5 );
-    var paladin = new Hero  ('Landen', 'Paladin', 'Divine Smite', 0, 20, 15, 5,  25);
+    //                        name      type       ability        xp  totalHp  hp  p   d   b
+    var rogue = new Hero    ('Tavion', 'Rogue',   'Sneak Attack', 0,   15,     15, 20, 25, 5 );
+    var paladin = new Hero  ('Landen', 'Paladin', 'Divine Smite', 0,   20,     20, 15, 5,  25);
 //#endregion
 ////////
 //#region Dice & Randomizers
@@ -131,7 +133,8 @@
         }
         document.getElementById('heroChosen').innerHTML = `Hero: ${currentHero.name}, the ${currentHero.type}`;
         document.getElementById('heroAbility').innerHTML = `Ability: ${currentHero.specialAbility}`;
-        document.getElementById('heroHp').innerHTML = `Total Hit Points: ${currentHero.hitPoints}`;
+        document.getElementById('heroTotalHp').innerHTML = `Total Hit Points: ${currentHero.totalHitPoints}`;
+        document.getElementById('heroHp').innerHTML = `Current Hit Points: ${currentHero.hitPoints}`;
         document.getElementById('heroPower').innerHTML = `Power: ${currentHero.power}`;
         document.getElementById('heroDodge').innerHTML = `Dodge: ${currentHero.dodge}`;
         document.getElementById('heroBlock').innerHTML = `Block: ${currentHero.block}`;
@@ -155,7 +158,8 @@
         }
         document.getElementById('enemyChosen').innerHTML = `Enemy: ${currentEnemy.name}`;
         document.getElementById('enemyAbility').innerHTML = `Ability: ${currentEnemy.specialAbility}`;
-        document.getElementById('enemyHp').innerHTML = `Total Hit Points: ${currentEnemy.hitPoints}`;
+        document.getElementById('enemyTotalHp').innerHTML = `Total Hit Points: ${currentEnemy.totalHitPoints}`;
+        document.getElementById('enemyHp').innerHTML = `Current Hit Points: ${currentEnemy.hitPoints}`;
         document.getElementById('enemyPower').innerHTML = `Power: ${currentEnemy.power}`;
         document.getElementById('enemyDodge').innerHTML = `Dodge: ${currentEnemy.dodge}`;
         document.getElementById('enemyBlock').innerHTML = `Block: ${currentEnemy.block}`;
@@ -197,6 +201,9 @@
             if (d20 > 0){
                 document.getElementById('damageDone').innerHTML = `${defender.name} blocks ${defender.block} damage and takes ${d20} damage`;
                 defender.hitPoints -= d20;
+                // Current HP Updates
+                document.getElementById('heroHp').innerHTML = `Current Hit Points: ${currentHero.hitPoints}`;
+                document.getElementById('enemyHp').innerHTML = `Current Hit Points: ${currentEnemy.hitPoints}`;
                 // Defender Dies
                 if (defender.hitPoints <= 0){
                     // HP Reset
