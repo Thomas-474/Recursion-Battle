@@ -111,7 +111,7 @@
         mindFlayer.hitPoints = 15;
         redDragon.hitPoints = 20;
         tarrasque.hitPoints = 25;
-        rogue.hitPoints = 15;
+        rogue.hitPoints = 17;
         paladin.hitPoints = 20;
     }
     // Turn Button Disabled
